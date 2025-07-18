@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Usuarios | Gestor de Salas</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  
+  <div class="container py-5">
+    <!-- Encabezado principal manteniendo el estilo del index -->
+    <div class="text-center mb-5">
+      <h1 class="display-4 text-primary">👤 Gestión de Usuarios</h1>
+      <p class="lead">Administrá los usuarios del sistema de reservas.</p>
+    </div>
+
+    <!-- Sección para agregar usuario -->
+    <div class="row justify-content-center mb-4">
+      <div class="col-md-8">
+        <div class="card shadow rounded">
+          <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0">Agregar Usuario</h3>
+          </div>
+          <div class="card-body">
+            <form method="post">
+              <div class="mb-3">
+                <label for="username" class="form-label">Nombre de usuario</label>
+                <input name="username" id="username" placeholder="Ingresá el nombre de usuario" required class="form-control">
+              </div>
+              <button type="submit" class="btn btn-primary">✅ Crear Usuario</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mensajes flash manteniendo la consistencia visual -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="row justify-content-center mb-4">
+        <div class="col-md-8">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+    {% endwith %}
+
+    <!-- Sección de usuarios registrados -->
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card shadow rounded">
+          <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0">Usuarios Registrados</h3>
+          </div>
+          <div class="card-body p-0">
+            {% if users %}
+              <div class="list-group list-group-flush">
+                {% for user in users %}
+                  <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                      <a href="/users/{{ user.id }}" class="text-decoration-none text-primary fw-bold">
+                        👤 {{ user.username }}
+                      </a>
+                    </div>
+                    <form method="post" action="/users/{{ user.id }}" class="d-inline">
+                      <button class="btn btn-danger btn-sm" type="submit" 
+                              onclick="return confirm('¿Estás seguro de eliminar este usuario?')">
+                        🗑️ Eliminar
+                      </button>
+                    </form>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="text-center py-4 text-muted">
+                <p>No hay usuarios registrados aún.</p>
+                <p>Creá tu primer usuario usando el formulario de arriba.</p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botón de navegación manteniendo el estilo -->
+    <div class="text-center mt-4">
+      <a href="/" class="btn btn-outline-primary">
+        ← Volver al inicio
+      </a>
+    </div>
+  </div>
+
+  <!-- Footer idéntico al del index -->
+  <footer class="text-center text-muted mt-5 mb-3 small">
+    Hecho con 💻 y 🧉 para aprobar.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

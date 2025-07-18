@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Consultar Reservas | Gestor de Salas</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  
+  <div class="container py-5">
+    <!-- Encabezado principal manteniendo el estilo del index -->
+    <div class="text-center mb-5">
+      <h1 class="display-4 text-primary">🔍 Consultar Reservas</h1>
+      <p class="lead">Buscá y visualizá las reservas existentes por usuario o sala.</p>
+    </div>
+
+    <!-- Mensajes flash manteniendo la consistencia visual -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="row justify-content-center mb-4">
+          <div class="col-md-10">
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Formulario de consulta -->
+    <div class="row justify-content-center mb-4">
+      <div class="col-md-10">
+        <div class="card shadow rounded">
+          <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0">Filtros de Búsqueda</h3>
+          </div>
+          <div class="card-body">
+            <form method="get" class="row g-3">
+              <!-- Campo de búsqueda por usuario -->
+              <div class="col-md-6">
+                <label for="user" class="form-label">👤 Buscar por usuario</label>
+                <input name="user" id="user" placeholder="Ingresá el nombre del usuario" 
+                       class="form-control" value="{{ request.args.get('user', '') }}" />
+                <div class="form-text">Dejá vacío para ver todas las reservas</div>
+              </div>
+
+              <!-- Campo de búsqueda por sala -->
+              <div class="col-md-6">
+                <label for="room" class="form-label">🏢 Buscar por sala</label>
+                <input name="room" id="room" placeholder="Ingresá el nombre de la sala" 
+                       class="form-control" value="{{ request.args.get('room', '') }}" />
+                <div class="form-text">Filtrá por una sala específica</div>
+              </div>
+
+              <!-- Botones de acción -->
+              <div class="col-12 pt-3">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                  <button type="submit" class="btn btn-primary btn-lg me-md-2">
+                    🔍 Buscar Reservas
+                  </button>
+                  <a href="/consult" class="btn btn-outline-secondary me-md-2">
+                    🔄 Limpiar Filtros
+                  </a>
+                  <a href="/" class="btn btn-outline-primary">
+                    ← Volver al inicio
+                  </a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resultados de la búsqueda -->
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <div class="card shadow rounded">
+          <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h3 class="card-title mb-0">Resultados de la Búsqueda</h3>
+            {% if bookings %}
+              <span class="badge bg-light text-dark">{{ bookings|length }} reserva(s) encontrada(s)</span>
+            {% endif %}
+          </div>
+          <div class="card-body">
+            {% if bookings %}
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead class="table-light">
+                    <tr>
+                      <th scope="col">📅 Reserva</th>
+                      <th scope="col">👤 Usuario</th>
+                      <th scope="col">🏢 Sala</th>
+                      <th scope="col">🕐 Horario</th>
+                      <th scope="col">📊 Estado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for b in bookings %}
+                      <tr>
+                        <td colspan="5" class="booking-info">
+                          <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold">{{ b }}</span>
+                            <span class="badge bg-success">Confirmada</span>
+                          </div>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            {% else %}
+              <div class="text-center py-5">
+                <div class="mb-4">
+                  <i class="display-1 text-muted">📋</i>
+                </div>
+                <h4 class="text-muted">No se encontraron reservas</h4>
+                <p class="text-muted">
+                  {% if request.args.get('user') or request.args.get('room') %}
+                    No hay reservas que coincidan con los filtros aplicados.
+                  {% else %}
+                    No hay reservas registradas en el sistema.
+                  {% endif %}
+                </p>
+                <div class="mt-4">
+                  <a href="/book" class="btn btn-primary">
+                    📝 Crear Nueva Reserva
+                  </a>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Información adicional sobre el uso del sistema -->
+    <div class="row justify-content-center mt-4">
+      <div class="col-md-10">
+        <div class="alert alert-info shadow-sm" role="alert">
+          <h5 class="alert-heading">💡 Consejos para buscar reservas:</h5>
+          <p class="mb-2">• Podés usar uno o ambos filtros para refinar tu búsqueda</p>
+          <p class="mb-2">• Dejá ambos campos vacíos para ver todas las reservas del sistema</p>
+          <p class="mb-2">• La búsqueda no distingue entre mayúsculas y minúsculas</p>
+          <p class="mb-0">• Si no encontrás lo que buscás, verificá que el nombre esté escrito correctamente</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer idéntico al del index -->
+  <footer class="text-center text-muted mt-5 mb-3 small">
+    Hecho con 💻 y 🧉 para aprobar.
+  </footer>
+
+  <!-- Scripts para mejorar la experiencia del usuario -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Funcionalidad para mejorar la experiencia de búsqueda
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('form');
+      const userInput = document.getElementById('user');
+      const roomInput = document.getElementById('room');
+      
+      // Permitir búsqueda con Enter en cualquier campo
+      [userInput, roomInput].forEach(input => {
+        input.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            form.submit();
+          }
+        });
+      });
+
+      // Limpiar campos automáticamente cuando se hace clic en "Limpiar Filtros"
+      const clearButton = document.querySelector('a[href="/consult"]');
+      if (clearButton) {
+        clearButton.addEventListener('click', function(e) {
+          e.preventDefault();
+          userInput.value = '';
+          roomInput.value = '';
+          // Enviar formulario vacío para mostrar todas las reservas
+          form.submit();
+        });
+      }
+
+      // Resaltar campos activos para mejor feedback visual
+      [userInput, roomInput].forEach(input => {
+        input.addEventListener('focus', function() {
+          this.parentElement.classList.add('field-focus');
+        });
+        
+        input.addEventListener('blur', function() {
+          this.parentElement.classList.remove('field-focus');
+        });
+      });
+    });
+  </script>
+  
+  <style>
+    /* Estilos adicionales para mejorar la presentación */
+    .field-focus {
+      transform: scale(1.02);
+      transition: transform 0.2s ease;
+    }
+    
+    .booking-info {
+      padding: 0.75rem 1rem;
+      border-left: 4px solid #0d6efd;
+    }
+    
+    .table-responsive {
+      border-radius: 0.375rem;
+    }
+  </style>
+</body>
+</html>

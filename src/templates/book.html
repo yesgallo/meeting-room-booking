@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Reservar Sala | Gestor de Salas</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body class="bg-light">
+
+  <div class="container py-5">
+    <div class="text-center mb-5">
+      <h1 class="display-4 text-primary">📝 Reservar Sala</h1>
+      <p class="lead">Seleccioná el usuario, la sala y el horario para crear tu reserva.</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="row justify-content-center mb-4">
+          <div class="col-md-10">
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show shadow-sm" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="row justify-content-center">
+      <div class="col-md-10">
+        <div class="card shadow rounded">
+          <div class="card-header bg-primary text-white">
+            <h3 class="card-title mb-0">Nueva Reserva</h3>
+          </div>
+          <div class="card-body">
+            <form method="post" class="row g-3 needs-validation" novalidate>
+              <div class="col-md-6">
+                <label for="username" class="form-label">👤 Usuario</label>
+                <select name="username" id="username" class="form-select" required>
+                  <option value="" disabled selected>Seleccionar usuario</option>
+                  {% for u in usuarios %}
+                    <option value="{{ u }}">{{ u }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label for="roomname" class="form-label">🏢 Sala</label>
+                <select name="roomname" id="roomname" class="form-select" required>
+                  <option value="" disabled selected>Seleccionar sala</option>
+                  {% for r in salas %}
+                    <option value="{{ r }}">{{ r }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label for="start" class="form-label">📅 Fecha y hora de inicio</label>
+                <input type="datetime-local" name="start" id="start" class="form-control" required />
+              </div>
+
+              <div class="col-md-6">
+                <label for="end" class="form-label">🕐 Fecha y hora de fin</label>
+                <input type="datetime-local" name="end" id="end" class="form-control" required />
+              </div>
+
+              <div class="col-12 pt-3">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                  <button type="submit" class="btn btn-success btn-lg me-md-2">✅ Confirmar Reserva</button>
+                  <a href="/" class="btn btn-outline-primary btn-lg">← Volver al inicio</a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-center mt-4">
+      <div class="col-md-10">
+        <div class="alert alert-info shadow-sm" role="alert">
+          <h5 class="alert-heading">💡 Consejos para reservar:</h5>
+          <ul class="mb-0">
+            <li>La reserva debe hacerse al menos 10 minutos en el futuro.</li>
+            <li>La fecha de fin debe ser posterior a la de inicio.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center text-muted mt-5 mb-3 small">
+    Hecho con 💻 y 🧉 para aprobar.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const now = new Date();
+      now.setMinutes(now.getMinutes() + 10);
+
+      const pad = (n) => (n < 10 ? '0' + n : n);
+      const toDatetimeLocal = (d) =>
+        d.getFullYear() + '-' +
+        pad(d.getMonth() + 1) + '-' +
+        pad(d.getDate()) + 'T' +
+        pad(d.getHours()) + ':' +
+        pad(d.getMinutes());
+
+      const startInput = document.getElementById('start');
+      const endInput = document.getElementById('end');
+
+      const defaultStart = new Date(now);
+      const defaultEnd = new Date(now);
+      defaultStart.setMinutes(defaultStart.getMinutes() + 5);
+      defaultEnd.setMinutes(defaultEnd.getMinutes() + 35);
+
+      const minStart = toDatetimeLocal(now);
+      startInput.min = minStart;
+      endInput.min = minStart;
+
+      startInput.value = toDatetimeLocal(defaultStart);
+      endInput.value = toDatetimeLocal(defaultEnd);
+
+      startInput.addEventListener('change', () => {
+        const s = new Date(startInput.value);
+        s.setMinutes(s.getMinutes() + 5);
+        endInput.min = toDatetimeLocal(s);
+      });
+    });
+  </script>
+</body>
+</html>
+
