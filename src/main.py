@@ -9,7 +9,6 @@ import threading
 app = Flask(__name__)
 app.secret_key = "supersecretkey"
 
-# Inicializar servicios
 user_service = UserService()
 room_service = RoomService()
 booking_service = BookingService(user_service, room_service)
@@ -26,9 +25,7 @@ def users():
         flash(f"Usuario '{username}' creado con éxito!", "success")
         return redirect(url_for("users"))
     
-    # CORREGIDO: Pasar la lista de usuarios al template
-    # El template users.html espera una variable llamada 'users' con objetos User
-    users_list = list(user_service.repo.users.values())  # Obtener los objetos User, no solo las claves
+    users_list = list(user_service.repo.users.values()) 
     return render_template("users.html", users=users_list)
 
 @app.route("/rooms", methods=["GET", "POST"])
@@ -39,8 +36,6 @@ def rooms():
         flash(f"Sala '{roomname}' creada con éxito!", "success")
         return redirect(url_for("rooms"))
     
-    # CORREGIDO: Pasar la lista de salas al template
-    # Similar al problema con usuarios, necesitamos pasar los objetos Room
     rooms_list = list(room_service.repo.rooms.values())
     return render_template("rooms.html", rooms=rooms_list)
 
@@ -52,7 +47,6 @@ def book():
         start = request.form["start"].replace("T", " ")[:16]
         end = request.form["end"].replace("T", " ")[:16]
         
-        # CORREGIDO: Ahora book_room() devuelve True/False correctamente
         result = booking_service.book_room(username, roomname, start, end)
         if result:
             flash("Reserva realizada con éxito!", "success")
@@ -60,13 +54,10 @@ def book():
             flash("Conflicto de horario o datos inválidos. La reserva NO se realizó.", "danger")
         return redirect(url_for("book"))
     
-    # CORREGIDO: El problema principal estaba aquí
-    # El template book.html espera las claves (nombres) como strings, no objetos
-    # Por eso usamos .keys() para obtener solo los nombres
-    usuarios = list(user_service.repo.users.keys())  # Lista de nombres de usuario
-    salas = list(room_service.repo.rooms.keys())     # Lista de nombres de salas
+    usuarios = list(user_service.repo.users.keys())  
+    salas = list(room_service.repo.rooms.keys())   
     
-    # Debug: Agregar estas líneas para verificar que los datos se están pasando correctamente
+
     print(f"DEBUG: Usuarios disponibles: {usuarios}")
     print(f"DEBUG: Salas disponibles: {salas}")
     

@@ -22,7 +22,7 @@ class BookingService:
 
         now = datetime.now()
 
-        # Nueva condición: permitir reservas desde ahora + 10 minutos
+
         min_start_time = now + timedelta(minutes=10)
         if start_dt < min_start_time:
             print(f"Hora de inicio inválida. Debe ser posterior a {min_start_time}")

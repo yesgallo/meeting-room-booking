@@ -9,13 +9,11 @@
 <body class="bg-light">
   
   <div class="container py-5">
-    <!-- Encabezado principal manteniendo el estilo del index -->
     <div class="text-center mb-5">
       <h1 class="display-4 text-primary">👤 Gestión de Usuarios</h1>
       <p class="lead">Administrá los usuarios del sistema de reservas.</p>
     </div>
 
-    <!-- Sección para agregar usuario -->
     <div class="row justify-content-center mb-4">
       <div class="col-md-8">
         <div class="card shadow rounded">
@@ -35,7 +33,6 @@
       </div>
     </div>
 
-    <!-- Mensajes flash manteniendo la consistencia visual -->
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
       <div class="row justify-content-center mb-4">
@@ -51,7 +48,6 @@
     {% endif %}
     {% endwith %}
 
-    <!-- Sección de usuarios registrados -->
     <div class="row justify-content-center">
       <div class="col-md-8">
         <div class="card shadow rounded">
@@ -88,7 +84,7 @@
       </div>
     </div>
 
-    <!-- Botón de navegación manteniendo el estilo -->
+
     <div class="text-center mt-4">
       <a href="/" class="btn btn-outline-primary">
         ← Volver al inicio
@@ -96,7 +92,6 @@
     </div>
   </div>
 
-  <!-- Footer idéntico al del index -->
   <footer class="text-center text-muted mt-5 mb-3 small">
     Hecho con 💻 y 🧉 para aprobar.
   </footer>
