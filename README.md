@@ -6,11 +6,11 @@ Aplicación web desarrollada en Python con Flask para gestionar reservas de sala
 
 ## 🎯 Funcionalidades
 
-* Crear usuarios ✅
-* Crear salas de reunión ✅
-* Realizar reservas con validación de horario ✅
-* Consultar reservas por usuario o por sala ✅
-* Feedback visual con Bootstrap 5 ✅
+* Alta de usuarios y salas ✅
+* Reservas con validación de fechas y solapamiento ✅
+* Consultas de reservas por usuario o por sala ✅
+* Interfaz minimalista con Bootstrap 5 ✅
+- Docker ready 🐳
 
 ---
 
@@ -19,13 +19,14 @@ Aplicación web desarrollada en Python con Flask para gestionar reservas de sala
 ```
 meeting-room-booking/
 ├── src/
-│   ├── main.py                  # Punto de entrada
-│   ├── templates/               # Archivos HTML
-│   ├── models/                  # Clases User, Room, Booking
-│   ├── repositories/            # Repositorios de usuarios, salas y reservas
-│   ├── services/                # Lógica de negocio
-├── requirements.txt            # Dependencias
-├── README.md                   # Este archivo
+│   ├── main.py                  
+│   ├── templates/             
+│   ├── models/                 
+│   ├── repositories/            
+│   ├── services/              
+├── requirements.txt             
+├── Dockerfile            
+├── README.md                  
 ```
 
 ---
@@ -59,17 +60,6 @@ Esto:
 
 ---
 
-## 📦 Estructura de Carpetas Importante
-
-* `templates/` debe contener los archivos HTML correctamente nombrados:
-
-  * `index.html`
-  * `users.html`
-  * `rooms.html`
-  * `book.html`
-  * `consult.html`
-
----
 
 ## 🧠 Diseño aplicado
 
@@ -82,10 +72,8 @@ Esto:
 
 ## 💡 Ideas futuras (bonus)
 
-* Validación de formularios con JS
 * Exportar reservas a PDF
 * Login para administrador
-* Dockerfile y despliegue en la nube
 
 ---
 
